@@ -22,72 +22,72 @@ public class NapActivity extends AppCompatActivity {
     private TextView countDown;
     private CountDownTimer countDownTimer;
     private String choix_music;
+    private int current_time;
+    private int temps_ecoule;
+    private boolean first_coutdown_launch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nap);
 
+        //Recupération de la valeur "choix_music" et securisation au cas où valeur nulle
         Intent intent = getIntent();
-        this.choix_music = intent.getStringExtra("choix_music");
+        if(intent != null) {
+            this.choix_music = intent.getStringExtra("choix_music");
+        }
+
+        //Initialisation de la toolbar
         this.configureToolbar();
-        //System.out.println("test 1"+ choix_music);
-        if(this.choix_music == "jungle") {
+
+        //Condition musique par défaut
+        if(this.choix_music.equals("jungle")) {
             this.source = R.raw.jungle;
         } else{
             this.source = R.raw.ocean;
         }
 
-
         this.countDown = (TextView)findViewById(R.id.countDown);
-
         this.mediaPlayer = MediaPlayer.create(getApplicationContext(), source );
-
         this.textView = (TextView)findViewById(R.id.duree_recup);
+        this.first_coutdown_launch = true;
 
-        //Intent intent = getIntent();
-        //this.choix_music = intent.getStringExtra("choix_music");
-        //System.out.println("test 2"+ choix_music);
 
         if(intent != null){
             this.duree_recup = intent.getIntExtra("duree_recup", 0);
-
             textView.setText("C'est parti pour une sieste de : " + duree_recup/60 + " min !");
         }
 
-
-        MainActivity ma = new MainActivity();
-
-
+            this.current_time = (duree_recup*1000);
 
         //Compte à rebours
-        this.countDownTimer = new CountDownTimer(duree_recup*1000, 1000) {
+        this.countDownTimer = new CountDownTimer(current_time, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
 
-                int minutes = (int) ((millisUntilFinished/1000)/60);
-                int secondes = (int)((millisUntilFinished/1000)%60);
-                countDown.setText(minutes+" : "+secondes);
+
+                if(first_coutdown_launch){
+                    current_time = (int) millisUntilFinished;
+                } else{
+                    current_time = (int) millisUntilFinished - (temps_ecoule);
+                }
+
+
+                int minutes = (int) ((current_time/1000)/60);
+                int secondes = (int)((current_time/1000)%60);
+                System.out.println(temps_ecoule);
+
+                countDown.setText(String.format( "%02d:%02d", minutes, secondes));
             }
 
 
             @Override
             public void onFinish() {
-                countDown.setText("Fin !!!");
-            }
-        };
-
-
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
                 mediaPlayer.stop();
+                countDown.setText("Fin !!!");
+
             }
         };
-
-        new Handler().postDelayed(runnable, duree_recup*60*1000);
-
-
     }
 
     @Override
@@ -97,13 +97,16 @@ public class NapActivity extends AppCompatActivity {
         countDownTimer.start();
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mediaPlayer.stop();
+    }
+
     private void configureToolbar(){
         Toolbar toolbar = (Toolbar)findViewById(R.id.main_toolbar);
-
         setSupportActionBar(toolbar);
-
         ActionBar actionBar = getSupportActionBar();
-
         actionBar.setDisplayHomeAsUpEnabled(true);
     }
 
@@ -113,7 +116,11 @@ public class NapActivity extends AppCompatActivity {
         if(mediaPlayer.isPlaying()){
 
             mediaPlayer.pause();
+            System.out.println("Temps sauvegardé avant: "+ current_time);
             countDownTimer.cancel();
+            System.out.println("Temps sauvegardé après: "+ current_time);
+            this.temps_ecoule = (duree_recup*1000) - current_time;
+            first_coutdown_launch = false;
 
             button.setText(getString(R.string.play_music_button));
 

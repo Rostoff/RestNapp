@@ -28,29 +28,37 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         this.seekBar = (SeekBar)findViewById(R.id.seekbar);
-        seekBar.setProgress(5);
+        seekBar.setProgress(10);
         this.temps = (TextView)findViewById(R.id.timer);
         this.btn_dodo = (Button)findViewById(R.id.go_dodo);
         //this.parameters = (Button)findViewById(R.id.parameters);
 
-
+        //System.out.println(choix_music);
         //Recuperation du choix de musique dans les paramètres
         Intent intent = getIntent();
+
         this.choix_music = intent.getStringExtra("choix_music");
+        if(this.choix_music == null) {
+            this.choix_music = "jungle";
+        }
+
+
 
         System.out.println(choix_music);
+
         //Configuration de la toolbar
         this.configureToolbar();
 
-        this.temps.setText("Durée de la sieste: " + (int)(seekBar.getProgress()*0.6) + "/" + (int)(seekBar.getMax()*0.6)+" min");
+        this.temps.setText("Durée de la sieste: " + seekBar.getProgress() +" min");
 
         this.seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            int progress = 0;
+            //int progress = 0;
             @Override
             public void onProgressChanged(SeekBar seekBar, int progressValue, boolean fromUser) {
-//                duree_recup = (int)(seekBar.getProgress()*0.6);
-                progress = progressValue;
-                temps.setText("Durée de la sieste: " + (int)(seekBar.getProgress()*0.6) + "/" + (int)(seekBar.getMax()*0.6)+" min");
+                //progress = progressValue;
+                //System.out.println("affiche progress: "+ progress);
+                //System.out.println("affiche le getProgress: " + (int)seekBar.getProgress());
+                temps.setText("Durée de la sieste: " + seekBar.getProgress() +" min");
             }
 
             @Override
@@ -69,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
 
 
-                duree_recup = (int)(seekBar.getProgress()*0.6*60); //temps en secondes
+                duree_recup = (int)(seekBar.getProgress()*60); //temps en secondes
 
                 Intent intent = new Intent(getApplicationContext(), NapActivity.class);
 
