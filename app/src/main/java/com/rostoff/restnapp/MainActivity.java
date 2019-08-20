@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
 
 
-                duree_recup = (int)(seekBar.getProgress()*60); //temps en secondes
+                duree_recup = (int)(seekBar.getProgress()); //temps en minutes
 
                 Intent intent = new Intent(getApplicationContext(), NapActivity.class);
 
