@@ -17,6 +17,7 @@ public class NapActivity extends AppCompatActivity {
 
     private TextView textView;
     private MediaPlayer mediaPlayer;
+    private MediaPlayer final_ring;
     private int source ;
     private int duree_recup;
     private TextView countDown;
@@ -51,11 +52,12 @@ public class NapActivity extends AppCompatActivity {
         this.countDown = (TextView)findViewById(R.id.countDown);
         this.mediaPlayer = MediaPlayer.create(getApplicationContext(), source );
         this.textView = (TextView)findViewById(R.id.duree_recup);
+        this.final_ring = MediaPlayer.create(getApplicationContext(), R.raw.happy);
 
         if(intent != null){
 
             this.duree_recup = intent.getIntExtra("duree_recup", 0);
-            textView.setText("C'est parti pour une sieste de : " + duree_recup + " min !");
+            textView.setText(getResources().getString(R.string.go_to_nap) + duree_recup + getResources().getString(R.string.minute));
         }
 
             this.current_time = duree_recup; //temps récupéré en minutes
@@ -77,6 +79,7 @@ public class NapActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         mediaPlayer.stop();
+        final_ring.stop();
         countDownTimer.cancel();
     }
 
@@ -93,9 +96,9 @@ public class NapActivity extends AppCompatActivity {
         if(mediaPlayer.isPlaying()){
 
             mediaPlayer.pause();
-            System.out.println("Temps sauvegardé avant: "+ milli_current_time);
+            //System.out.println("Temps sauvegardé avant: "+ milli_current_time);
             countDownTimer.cancel();
-            System.out.println("Temps sauvegardé après: "+ milli_current_time);
+            //System.out.println("Temps sauvegardé après: "+ milli_current_time);
             //this.temps_ecoule = (duree_recup*1000*60) - milli_current_time;
 
             button.setText(getString(R.string.play_music_button));
@@ -116,7 +119,7 @@ public class NapActivity extends AppCompatActivity {
         this.countDownTimer = new CountDownTimer(milli_current_time, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
-                System.out.println("depart" +milli_current_time);
+                //System.out.println("depart" +milli_current_time);
 
 
                     milli_current_time = (int) millisUntilFinished;
@@ -127,8 +130,8 @@ public class NapActivity extends AppCompatActivity {
 
                 int minutes = (int) ((milli_current_time / 1000) / 60);
                 int secondes = (int) ((milli_current_time / 1000) % 60);
-                System.out.println("millisuntil" + millisUntilFinished);
-                System.out.println("Milli_current_time = " + milli_current_time);
+                //System.out.println("millisuntil" + millisUntilFinished);
+                //System.out.println("Milli_current_time = " + milli_current_time);
 
                 countDown.setText(String.format("%02d:%02d", minutes, secondes));
 
@@ -140,6 +143,8 @@ public class NapActivity extends AppCompatActivity {
 
                 mediaPlayer.stop();
                 countDown.setText("Fin !!");
+                final_ring.start();
+
             }
         };
     }

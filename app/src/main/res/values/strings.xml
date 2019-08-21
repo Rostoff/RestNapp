@@ -5,4 +5,6 @@
     <string name="play_music_button">PLAY</string>
     <string name="stop_music_button">PAUSE</string>
     <string name="choose_your_song">Choix de la musique :</string>
+    <string name="minute">min</string>
+    <string name="go_to_nap">C\'est parti pour une sieste de :</string>
 </resources>

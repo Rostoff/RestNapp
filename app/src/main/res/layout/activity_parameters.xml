@@ -19,17 +19,30 @@
         android:padding="15dp"
         android:text="@string/choose_your_song"/>
 
+    <!--<CheckBox-->
+        <!--android:id="@+id/jungle_choice"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="Jungle" />-->
+
+    <!--<CheckBox-->
+        <!--android:id="@+id/ocean_choice"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="Ocean" />-->
+
     <Button
         android:id="@+id/jungle_choice"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/button_bg_color"
         android:text="Jungle" />
 
     <Button
         android:id="@+id/ocean_choice"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/button_bg_color"
         android:text="Ocean" />
-
 
 </LinearLayout>

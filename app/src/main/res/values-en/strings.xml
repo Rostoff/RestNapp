@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">RestNapp</string>
+    <string name="timer">Duration of nap: </string>
+    <string name="go_dodo">GO !!</string>
+    <string name="play_music_button">PLAY</string>
+    <string name="stop_music_button">PAUSE</string>
+    <string name="choose_your_song">Music choice :</string>
+    <string name="minute">min</string>
+    <string name="go_to_nap">Let\'s go for a nap of :</string>
+</resources>

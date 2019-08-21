@@ -31,9 +31,7 @@ public class MainActivity extends AppCompatActivity {
         seekBar.setProgress(10);
         this.temps = (TextView)findViewById(R.id.timer);
         this.btn_dodo = (Button)findViewById(R.id.go_dodo);
-        //this.parameters = (Button)findViewById(R.id.parameters);
 
-        //System.out.println(choix_music);
         //Recuperation du choix de musique dans les paramètres
         Intent intent = getIntent();
 
@@ -49,16 +47,14 @@ public class MainActivity extends AppCompatActivity {
         //Configuration de la toolbar
         this.configureToolbar();
 
-        this.temps.setText("Durée de la sieste: " + seekBar.getProgress() +" min");
+        this.temps.setText(getResources().getString(R.string.timer) +' '+ seekBar.getProgress() + getResources().getString(R.string.minute));
+
 
         this.seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             //int progress = 0;
             @Override
             public void onProgressChanged(SeekBar seekBar, int progressValue, boolean fromUser) {
-                //progress = progressValue;
-                //System.out.println("affiche progress: "+ progress);
-                //System.out.println("affiche le getProgress: " + (int)seekBar.getProgress());
-                temps.setText("Durée de la sieste: " + seekBar.getProgress() +" min");
+                temps.setText(getResources().getString(R.string.timer) +' '+ seekBar.getProgress() + getResources().getString(R.string.minute));
             }
 
             @Override

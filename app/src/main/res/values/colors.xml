@@ -5,4 +5,7 @@
     <color name="colorAccent">#D81B60</color>
     <color name="duracell_rose">#ee8c81</color>
     <color name="white">#ffffff</color>
+    <color name="button_pressed">#ff8a00</color>
+    <color name="button_focused">#ff8a00</color>
+    <color name="button_default">#d6d7d7</color>
 </resources>
