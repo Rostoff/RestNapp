@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -16,13 +17,48 @@ import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
+    // VARIABLES
     private SeekBar seekBar;
     private TextView temps;
     private Button btn_dodo;
-    //private Button parameters;
     private int duree_recup;
-    private String choix_music;
     private SharedPreferences sharedPreferences;
+
+
+    //region CUSTOM LISTENERS
+    private final SeekBar.OnSeekBarChangeListener seekBarCustomListner =
+            new SeekBar.OnSeekBarChangeListener() {
+
+                @Override
+                public void onProgressChanged(SeekBar seekBar, int progressValue, boolean fromUser) {
+                    temps.setText(getResources().getString(R.string.timer) +' '+ seekBar.getProgress() + getResources().getString(R.string.minute));
+                }
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) {
+                }
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar) {
+
+                }
+            };
+
+    private final View.OnClickListener viewOnClickListenerCustom =
+            new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    //sharedPreferences = getSharedPreferences("Datas", Context.MODE_PRIVATE);
+                    duree_recup = seekBar.getProgress(); //temps en minutes
+
+                    sharedPreferences.edit().putInt("sauvegarde_duree_music", duree_recup).apply();
+                    sharedPreferences.edit().commit();
+
+                    Intent intent = new Intent(getApplicationContext(), NapActivity.class);
+                    startActivity(intent);
+
+                }
+            };
+    //endregion
 
 
     @Override
@@ -30,72 +66,26 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        sharedPreferences = getPreferences(MODE_PRIVATE);
-
         this.seekBar = (SeekBar)findViewById(R.id.seekbar);
-        seekBar.setProgress(10);
         this.temps = (TextView)findViewById(R.id.timer);
         this.btn_dodo = (Button)findViewById(R.id.go_dodo);
 
-        //Recuperation du choix de musique dans les paramètres
-        Intent intent = getIntent();
+        sharedPreferences = getSharedPreferences("Datas", Context.MODE_PRIVATE);
+        duree_recup = sharedPreferences.getInt("sauvegarde_duree_music", 0);
 
-        this.choix_music = intent.getStringExtra("choix_music");
-        if(this.choix_music == null) {
-            this.choix_music = "jungle";
-        }
-
-
-
-        //System.out.println(choix_music);
-        //System.out.println("Contenu de la shared "+sharedPreferences.getString("sauvegarde_choix_music", choix_music));
-
-        //Configuration de la toolbar
         this.configureToolbar();
+        this.configureUI();
 
-        this.temps.setText(getResources().getString(R.string.timer) +' '+ seekBar.getProgress() + getResources().getString(R.string.minute));
+        this.seekBar.setOnSeekBarChangeListener(seekBarCustomListner);
+        btn_dodo.setOnClickListener(viewOnClickListenerCustom);
+    }
 
+    //region FUNCTIONS
+    private void configureToolbar(){
+        Toolbar toolbar = (Toolbar)findViewById(R.id.main_toolbar);
+        setSupportActionBar(toolbar);
+    }
 
-        this.seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            //int progress = 0;
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progressValue, boolean fromUser) {
-                temps.setText(getResources().getString(R.string.timer) +' '+ seekBar.getProgress() + getResources().getString(R.string.minute));
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
-            }
-        });
-
-        btn_dodo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-
-                duree_recup = (int)(seekBar.getProgress()); //temps en minutes
-
-                Intent intent = new Intent(getApplicationContext(), NapActivity.class);
-
-                intent.putExtra("duree_recup", duree_recup);
-                intent.putExtra("choix_music", choix_music);
-
-                startActivity(intent);
-                //finish();
-            }
-        });
-
-    } //fin de onCreate
-
-
-
-    @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch(item.getItemId()){
             case R.id.parameters:
@@ -112,8 +102,11 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    private void configureToolbar(){
-        Toolbar toolbar = (Toolbar)findViewById(R.id.main_toolbar);
-        setSupportActionBar(toolbar);
+    private void configureUI(){
+        seekBar.setProgress(duree_recup);
+        this.temps.setText(getResources().getString(R.string.timer) +' '+ seekBar.getProgress() + getResources().getString(R.string.minute));
+
     }
+
+    //endregion
 }

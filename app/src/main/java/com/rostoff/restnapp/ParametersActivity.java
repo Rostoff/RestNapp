@@ -11,6 +11,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.PersistableBundle;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -37,44 +38,74 @@ public class ParametersActivity extends AppCompatActivity {
         this.configureToolbar();
 
 
-        ocean.setOnClickListener(new View.OnClickListener() {
+        ocean.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onClick(View view) {
+            public boolean onTouch(View view, MotionEvent motionEvent) {
 
-                choix_music = "ocean";
-                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                intent.putExtra("choix_music", choix_music);
-                startActivity(intent);
-                sharedPreferences.edit().putString("sauvegarde_choix_music", choix_music).apply();
-                sharedPreferences.edit().commit();
+                if(motionEvent.getAction() == MotionEvent.ACTION_DOWN){
+                    save_music_choice("ocean");
+                    setSeletedButton(false, true);
+
+                       Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                       //intent.putExtra("choix_music", choix_music);
+                       startActivity(intent);
+
+
+                }
+                return true;
 
             }
         });
 
-        jungle.setOnClickListener(new View.OnClickListener() {
+        jungle.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onClick(View view) {
-                choix_music = "jungle";
-                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                intent.putExtra("choix_music", choix_music);
-                startActivity(intent);
-                sharedPreferences.edit().putString("sauvegarde_choix_music", choix_music).apply();
-                sharedPreferences.edit().commit();
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+
+                if(motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+                    save_music_choice("jungle");
+                    setSeletedButton(true, false);
+
+                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                    //intent.putExtra("choix_music", choix_music);
+                    startActivity(intent);
+
+                }
+                return true;
+
             }
         });
 
+    }
 
-        sharedPreferences = getSharedPreferences("Datas", Context.MODE_PRIVATE);
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        colorButtononPressed();
+    }
+
+    //Met en mémoire le choix de musique dans le SharedPreferences
+    private void save_music_choice(String choixMusic) {
+        sharedPreferences.edit().putString("sauvegarde_choix_music", choixMusic).apply();
+        sharedPreferences.edit().commit();
+    }
+
+
+    //Chaque bouton sera considéré comme "appuyé"
+    private boolean setSeletedButton(boolean jungleSelect, boolean oceanSelect) {
+        this.jungle.setPressed(jungleSelect);
+        this.ocean.setPressed(oceanSelect);
+        return true;
+    }
+
+    //Recupération de la valeur enregistré et appel de la fonction setSelectedButton en fonction
+    public void colorButtononPressed(){
         String music = sharedPreferences.getString("sauvegarde_choix_music", "vide");
-        System.out.println("parametres sauvegardé: " + music);
-
 
         if(music.equals("jungle")){
-            this.jungle.setPressed(true);
-        }
-
-        if(music.equals("ocean")){
-            this.ocean.setPressed(true);
+            setSeletedButton(true, false);
+        } else {
+            setSeletedButton(false, true);
         }
     }
 
