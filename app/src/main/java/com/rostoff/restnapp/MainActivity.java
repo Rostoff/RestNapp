@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,11 +22,15 @@ public class MainActivity extends AppCompatActivity {
     //private Button parameters;
     private int duree_recup;
     private String choix_music;
+    private SharedPreferences sharedPreferences;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        sharedPreferences = getPreferences(MODE_PRIVATE);
 
         this.seekBar = (SeekBar)findViewById(R.id.seekbar);
         seekBar.setProgress(10);
@@ -42,7 +47,8 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        System.out.println(choix_music);
+        //System.out.println(choix_music);
+        //System.out.println("Contenu de la shared "+sharedPreferences.getString("sauvegarde_choix_music", choix_music));
 
         //Configuration de la toolbar
         this.configureToolbar();

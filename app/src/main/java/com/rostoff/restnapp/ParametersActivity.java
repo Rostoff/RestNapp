@@ -5,6 +5,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -19,7 +20,7 @@ public class ParametersActivity extends AppCompatActivity {
     private Button ocean;
     private Button jungle;
     private String choix_music;
-    private SharedPreferences preferences_music;
+    private SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +31,7 @@ public class ParametersActivity extends AppCompatActivity {
         this.jungle = (Button)findViewById(R.id.jungle_choice);
 
         //sauvegarde du choix de musique
-        preferences_music = getPreferences(MODE_PRIVATE);
+        sharedPreferences = getSharedPreferences("Datas", Context.MODE_PRIVATE);
 
         //Configurer et utiliser la fonction configureToolbar
         this.configureToolbar();
@@ -44,7 +45,9 @@ public class ParametersActivity extends AppCompatActivity {
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                 intent.putExtra("choix_music", choix_music);
                 startActivity(intent);
-                preferences_music.edit().putString("sauvegarde_choix_music", choix_music).apply();
+                sharedPreferences.edit().putString("sauvegarde_choix_music", choix_music).apply();
+                sharedPreferences.edit().commit();
+
             }
         });
 
@@ -55,23 +58,22 @@ public class ParametersActivity extends AppCompatActivity {
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                 intent.putExtra("choix_music", choix_music);
                 startActivity(intent);
-                preferences_music.edit().putString("sauvegarde_choix_music", choix_music).apply();
+                sharedPreferences.edit().putString("sauvegarde_choix_music", choix_music).apply();
+                sharedPreferences.edit().commit();
             }
         });
 
-        choix_music = getPreferences(MODE_PRIVATE).getString("sauvegarde_choix_music", null);
-        //System.out.println("sauvegarde " + choix_music);
 
-        if(this.choix_music == null) {
-            this.choix_music = "jungle";
+        sharedPreferences = getSharedPreferences("Datas", Context.MODE_PRIVATE);
+        String music = sharedPreferences.getString("sauvegarde_choix_music", "vide");
+        System.out.println("parametres sauvegardé: " + music);
+
+
+        if(music.equals("jungle")){
             this.jungle.setPressed(true);
         }
 
-        if(this.choix_music =="jungle"){
-            this.jungle.setPressed(true);
-        }
-
-        if(this.choix_music == "ocean"){
+        if(music.equals("ocean")){
             this.ocean.setPressed(true);
         }
     }
@@ -89,4 +91,5 @@ public class ParametersActivity extends AppCompatActivity {
         //Activer la flèche de retour
         actionBar.setDisplayHomeAsUpEnabled(true);
     }
+
 }
